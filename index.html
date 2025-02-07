@@ -4,14 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+    />
     <title>Calendário Dinâmico</title>
   </head>
   <body>
     <div class="wrapper">
       <div id="calendar">
-        <div class="header"></div>
+        <div class="header">
+          <h1 class="current-date"></h1>
+          <div class="icons">
+            <span id="prev" class="material-symbols-outlined"
+              >chevron_left</span
+            >
+            <span id="next" class="material-symbols-outlined"
+              >chevron_right</span
+            >
+          </div>
+        </div>
 
-        <ul class="days">
+        <ul class="weeks">
           <li>Seg</li>
           <li>Ter</li>
           <li>Qua</li>
@@ -21,8 +35,10 @@
           <li>Dom</li>
         </ul>
 
-        <div id="dates"></div>
+        <ul id="dates" class="dates"></ul>
       </div>
     </div>
+
+    <script src="script/script.js"></script>
   </body>
 </html>
