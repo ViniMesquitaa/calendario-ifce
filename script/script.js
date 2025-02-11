@@ -33,19 +33,21 @@ function renderCalendar() {
   let daysMonth = "";
 
   for (let i = firstDayMonth; i > 0; i--) {
-    daysMonth += <li class="last-days">${lastDateLastMonth - i + 1}</li>;
+    daysMonth += `<li class="last-days">${lastDateLastMonth - i + 1}</li>`;
   }
 
   for (let i = 1; i <= lastDateMonth; i++) {
     var today =
-      i === date.getDate() && current_month === new Date().getMonth() && current_year === new Date().getFullYear()
+      i === date.getDate() &&
+      current_month === new Date().getMonth() &&
+      current_year === new Date().getFullYear()
         ? "today"
         : "";
-    daysMonth += <li class="${today}">${i}</li>;
+    daysMonth += `<li class="${today}">${i}</li>`;
   }
 
   for (let i = 1; i <= 6 - lastDayOfMonth; i++) {
-    daysMonth += <li class="last-days">${i}</li>;
+    daysMonth += `<li class="last-days">${i}</li>`;
   }
 
   current_date.innerHTML = `${months[current_month]} ${current_year}`;
