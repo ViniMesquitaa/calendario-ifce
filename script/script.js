@@ -32,12 +32,10 @@ function renderCalendar() {
   let lastDateLastMonth = new Date(current_year, current_month, 0).getDate();
   let daysMonth = "";
 
-  // últimos dias do mês anterior
   for (let i = firstDayMonth; i > 0; i--) {
     daysMonth += `<li class="last-days">${lastDateLastMonth - i + 1}</li>`;
   }
 
-  // dias do mês atual
   for (let i = 1; i <= lastDateMonth; i++) {
     var today =
       i === date.getDate() && current_month === new Date().getMonth() && current_year === new Date().getFullYear()
@@ -46,7 +44,6 @@ function renderCalendar() {
     daysMonth += `<li class="${today}">${i}</li>`;
   }
 
-  // últimos dias do mês (próximo mês)
   for (let i = 1; i <= 6 - lastDayOfMonth; i++) {
     daysMonth += `<li class="last-days">${i}</li>`;
   }
@@ -56,5 +53,7 @@ function renderCalendar() {
 }
 
 renderCalendar();
+
+
 
 
