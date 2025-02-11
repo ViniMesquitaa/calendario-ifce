@@ -11,18 +11,33 @@
     <title>Calendário Dinâmico</title>
   </head>
   <body>
-    <div class="wrapper">
-      <div id="calendar">
-        <div class="header">
-          <h1 class="current-date"></h1>
-          <div class="icons">
-            <span id="prev" class="material-symbols-outlined"
-              >chevron_left</span
-            >
-            <span id="next" class="material-symbols-outlined"
-              >chevron_right</span
-            >
+    <div id="fullbody">
+      <div class="wrapper">
+        <div id="calendar">
+          <div class="header">
+            <h1 class="current-date"></h1>
+            <div class="icons">
+              <span id="prev" class="material-symbols-outlined"
+                >chevron_left</span
+              >
+              <span id="next" class="material-symbols-outlined"
+                >chevron_right</span
+              >
+            </div>
           </div>
+  
+          <ul class="weeks">
+            <li>Seg</li>
+            <li>Ter</li>
+            <li>Qua</li>
+            <li>Qui</li>
+            <li>Sex</li>
+            <li>Sáb</li>
+            <li>Dom</li>
+          </ul>
+  
+          <ul id="days" class="days">
+          </ul>
         </div>
 
         <ul class="weeks">
@@ -38,6 +53,7 @@
         <ul id="days" class="days"></ul>
       </div>
     </div>
+    
 
     <script src="script/script.js"></script>
   </body>
