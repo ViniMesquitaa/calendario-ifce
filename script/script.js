@@ -48,7 +48,7 @@ function renderCalendar() {
     daysMonth += <li class="last-days">${i}</li>;
   }
 
-  current_date.innerHTML = ${months[current_month]} ${current_year};
+  current_date.innerHTML = `${months[current_month]} ${current_year}`;
   days.innerHTML = daysMonth;
 }
 
