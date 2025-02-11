@@ -2,7 +2,7 @@ const days = document.querySelector(".dates");
 const current_date = document.querySelector(".current-date");
 const icons_btn = document.querySelectorAll(".icons span");
 
-window.addEventListener("DOMContentLoaded", renderCalendar)
+window.addEventListener("DOMContentLoaded", renderCalendar);
 
 function renderCalendar() {
     let DateToday = new Date(); 
@@ -15,12 +15,11 @@ function renderCalendar() {
     let today = new Date().getDate();
 
     for (let i = 1; i <= daysInMonth; i++) {
-        
         days.innerHTML += `<span id="day${i}">${i}</span>`;
+    }
 
-        let todayElement = document.getElementById(`day${today}`);
-        if(i == today) {
-            todayElement.style.color = "red"; 
-        }
+    let todayElement = document.getElementById(`day${today}`);
+    if (todayElement) {
+        todayElement.style.color = "red"; 
     }
 }
