@@ -55,3 +55,17 @@ function renderCalendar() {
 }
 
 renderCalendar();
+
+function navigate(direction) {
+  current_month += direction;
+
+  if (current_month > 11) {
+    current_month = 0;
+    current_year++;
+  } else if (current_month < 0) {
+    current_month = 11;
+    current_year--;
+  }
+
+  renderCalendar();
+}
