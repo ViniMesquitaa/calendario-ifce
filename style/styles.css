@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +8,7 @@
 
 :root {
   --color-primary: aliceblue;
-  --background-calendar: #2f343d;
+  --background-calendar: #4a494d;
 }
 
 body {
@@ -14,7 +16,6 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: Poppins;
 }
 
 .wrapper {
@@ -106,32 +107,32 @@ body {
     font-size: 25px;
   }
   .wrapper {
-    width: 400px;
-    height: 500px;
+    width: 700px;
+    height:440px;
     display: flex;
-    justify-content: center;
-    
+    justify-content: start;
     border-radius: 10px;
     box-shadow: 4px 4px 30px 0px rgba(0, 0, 0, 0.623);
+    padding: 40px;
   }
 
   #calendar {
     width: 300px;
     height: 400px;
-    
   }
 
   .weeks {
     display: flex;
+    justify-content: center;
     gap: 14.9px;
     font-size: 16px;
     list-style-type: none;
     color: aliceblue;
-   
   }
 
   .weeks li {
     font-weight: 400;
+    padding: 2px;
   }
 
   .days {
@@ -140,6 +141,7 @@ body {
     gap: 7.7px;
     justify-content: center;
     align-items: center;
+    
   }
 
   .days li {
@@ -151,4 +153,31 @@ body {
     border-radius: 5px;
     transition: background 0.5s;
   }
+
+  #show-tasks{
+    width: 300px;
+    height: 300px;
+    background-color: #eeeff1;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    margin-left: 3rem;
+    box-shadow: 4px 4px 30px 0px rgba(0, 0, 0, 0.33);
+
+
+  }
+
+  .header-tasks{
+    height: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .header-tasks h2{
+    font-size: 30px;
+  }
+  
 }
