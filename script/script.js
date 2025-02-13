@@ -69,3 +69,21 @@ function navigate(direction) {
 
   renderCalendar();
 }
+
+function addTask() {
+  let btnAddTask = document.getElementById("btnAddTask");
+
+  let input = document.createElement("input");
+  input.type = "text";
+  input.id = "iptTask";
+
+  btnAddTask.replaceWith(input);
+
+  input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      input.replaceWith(btnAddTask);
+      let iptTask = document.getElementById("iptTask").value;
+      document.getElementById("show-tasks").innerHTML += iptTask;
+    }
+  });  
+}
