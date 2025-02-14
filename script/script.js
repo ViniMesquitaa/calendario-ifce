@@ -6,8 +6,18 @@ let tasksStorage = JSON.parse(localStorage.getItem("tasks")) || {};
 let selectedDate = null;
 
 const months = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
 ];
 
 let date = new Date(),
@@ -18,7 +28,11 @@ let date = new Date(),
 function renderCalendar() {
   let firstDayMonth = new Date(current_year, current_month, 1).getDay();
   let lastDateMonth = new Date(current_year, current_month + 1, 0).getDate();
-  let lastDayOfMonth = new Date(current_year, current_month, lastDateMonth).getDay();
+  let lastDayOfMonth = new Date(
+    current_year,
+    current_month,
+    lastDateMonth
+  ).getDay();
   let lastDateLastMonth = new Date(current_year, current_month, 0).getDate();
   let daysMonth = "";
 
@@ -29,9 +43,15 @@ function renderCalendar() {
 
   // Preencher os dias do mês atual
   for (let i = 1; i <= lastDateMonth; i++) {
-    let today = i === date.getDate() && current_month === new Date().getMonth() && current_year === new Date().getFullYear() ? "today" : "";
+    let today =
+      i === date.getDate() &&
+      current_month === new Date().getMonth() &&
+      current_year === new Date().getFullYear()
+        ? "today"
+        : "";
     let key = `${current_year}-${current_month + 1}-${i}`;
-    let taskClass = tasksStorage[key] && tasksStorage[key].length > 0 ? "task-day" : "";
+    let taskClass =
+      tasksStorage[key] && tasksStorage[key].length > 0 ? "task-day" : "";
 
     daysMonth += `<li class="${today} ${taskClass}" onclick="selectDay(${i})">${i}</li>`;
   }
@@ -48,7 +68,9 @@ function renderCalendar() {
 // Função para selecionar o dia e exibir as tarefas
 function selectDay(day) {
   let today = new Date();
-  let isPastDate = new Date(current_year, current_month, day) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  let isPastDate =
+    new Date(current_year, current_month, day) <
+    new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
   if (isPastDate) {
     alert("Você não pode adicionar tasks em dias passados!");
@@ -67,18 +89,25 @@ function showTasks() {
 
   taskContainer.innerHTML = `
     <div class="header-tasks">
-      <h2>Tasks para ${selectedDate.split("-").reverse().join("/")}</h2>
+    <div class="header-tasks-title">
+    <h2>Tasks para ${selectedDate.split("-").reverse().join("/")}</h2>
+    </div>
+      
       <div class="task-input">
         <input type="text" id="taskInput" placeholder="Digite sua task..." />
         <button onclick="addTask()">Adicionar</button>
       </div>
     </div>
     <ul class="task-list">
-      ${tasks.map((task, index) => `
+      ${tasks
+        .map(
+          (task, index) => `
         <li>
           ${task} 
           <button onclick="deleteTask(${index})">❌</button>
-        </li>`).join("")}
+        </li>`
+        )
+        .join("")}
     </ul>
   `;
 
@@ -122,6 +151,21 @@ function deleteTask(index) {
 function loadTodayTasks() {
   selectedDate = `${current_year}-${current_month + 1}-${date.getDate()}`;
   showTasks();
+}
+// Função para mudar o mês
+function navigate(direction) {
+  current_month += direction;
+
+  if (current_month > 11) {
+    current_month = 0;
+    current_year++;
+  } else if (current_month < 0) {
+    current_month = 11;
+    current_year--;
+  }
+
+  renderCalendar(); // Re-renderiza o calendário
+  loadTodayTasks(); // Carrega as tarefas do dia atual (se necessário)
 }
 
 // Inicializa o calendário e carrega as tarefas do dia atual
