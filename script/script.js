@@ -90,7 +90,7 @@ function showTasks() {
   taskContainer.innerHTML = `
     <div class="header-tasks">
     <div class="header-tasks-title">
-    <h2>Tasks para ${selectedDate.split("-").reverse().join("/")}</h2>
+    <h2>Tasks - ${selectedDate.split("-").reverse().join("/")}</h2>
     </div>
       
       <div class="task-input">
@@ -114,6 +114,7 @@ function showTasks() {
   document.getElementById("taskInput").focus();
 }
 
+
 // Função para adicionar uma tarefa
 function addTask() {
   if (!selectedDate) return;
@@ -122,16 +123,20 @@ function addTask() {
   let taskText = taskInput.value.trim();
 
   if (taskText) {
+    let currentTime = new Date().toLocaleTimeString("pt-BR", { hour12: false });
+    let taskWithTime = `${taskText} <span class="task-time"><span class="material-symbols-outlined">access_time</span> ${currentTime}</span>`;
+
     if (!tasksStorage[selectedDate]) {
       tasksStorage[selectedDate] = [];
     }
-    tasksStorage[selectedDate].push(taskText);
+    tasksStorage[selectedDate].push(taskWithTime);
     localStorage.setItem("tasks", JSON.stringify(tasksStorage));
     taskInput.value = ""; // Limpar o campo de entrada
     renderCalendar(); // Re-renderiza o calendário
     showTasks(); // Atualiza as tarefas
   }
 }
+
 
 // Função para excluir uma tarefa
 function deleteTask(index) {
@@ -171,3 +176,48 @@ function navigate(direction) {
 // Inicializa o calendário e carrega as tarefas do dia atual
 renderCalendar();
 loadTodayTasks();
+
+
+// Função do botão "Hoje"
+const todayButton = document.getElementById("today-btn");
+
+todayButton.addEventListener("click", function() {
+  date = new Date(); // Atualiza a data para hoje
+  current_year = date.getFullYear(); // Atualiza o ano
+  current_month = date.getMonth(); // Atualiza o mês
+  renderCalendar(); // Atualiza o calendário para o mês atual
+});
+
+// Função para adicionar tarefas ao dia específico
+function addTaskCurrent(day) {
+  let taskListContainer = document.getElementById("show-tasks");
+  taskListContainer.innerHTML = "";
+
+  let header = document.createElement("div");
+  header.id = `header-${day}`;
+  header.className = "header-tasks";
+
+  
+}
+
+function updateTime() {
+  const timeElement = document.getElementById('current-time');
+  const options = { timeZone: 'America/Sao_Paulo', hour24: true };
+  const date = new Date().toLocaleString('pt-BR', options);
+
+  timeElement.textContent = date.split(' ')[1];
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+
+
+function updateDate() {
+  const dateElement = document.getElementById('current-date');
+  const options = { dateStyle: 'full', timeZone: 'America/Sao_Paulo' };
+  const date = new Date().toLocaleString('pt-BR', options);
+
+  dateElement.textContent = date.split(',')[1].trim();
+}
+
+updateDate();
