@@ -1,22 +1,13 @@
 const days = document.querySelector(".days");
 const current_date = document.querySelector(".current-date");
-const icons_btn = document.querySelectorAll(".icons span");
-let tasksStorage = JSON.parse(localStorage.getItem("tasks")) || {};
+const taskContainer = document.getElementById("show-tasks");
 
+let tasksStorage = JSON.parse(localStorage.getItem("tasks")) || {};
+let selectedDate = null;
 
 const months = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
 let date = new Date(),
@@ -26,11 +17,7 @@ let date = new Date(),
 function renderCalendar() {
   let firstDayMonth = new Date(current_year, current_month, 1).getDay();
   let lastDateMonth = new Date(current_year, current_month + 1, 0).getDate();
-  let lastDayOfMonth = new Date(
-    current_year,
-    current_month,
-    lastDateMonth
-  ).getDay();
+  let lastDayOfMonth = new Date(current_year, current_month, lastDateMonth).getDay();
   let lastDateLastMonth = new Date(current_year, current_month, 0).getDate();
   let daysMonth = "";
 
@@ -39,13 +26,15 @@ function renderCalendar() {
   }
 
   for (let i = 1; i <= lastDateMonth; i++) {
-    var today =
-      i === date.getDate() &&
-      current_month === new Date().getMonth() &&
-      current_year === new Date().getFullYear()
-        ? "today"
-        : "";
-    daysMonth += `<li class="${today}">${i}</li>`;
+    let today = i === date.getDate() &&
+                current_month === new Date().getMonth() &&
+                current_year === new Date().getFullYear()
+                ? "today" : "";
+
+    let key = `${current_year}-${current_month + 1}-${i}`;
+    let taskClass = tasksStorage[key] && tasksStorage[key].length > 0 ? "task-day" : "";
+
+    daysMonth += `<li class="${today} ${taskClass}" onclick="selectDay(${i})">${i}</li>`;
   }
 
   for (let i = 1; i <= 6 - lastDayOfMonth; i++) {
@@ -56,124 +45,73 @@ function renderCalendar() {
   days.innerHTML = daysMonth;
 }
 
-renderCalendar();
+function selectDay(day) {
+  let today = new Date();
+  let isPastDate = new Date(current_year, current_month, day) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-function navigate(direction) {
-  current_month += direction;
-
-  if (current_month > 11) {
-    current_month = 0;
-    current_year++;
-  } else if (current_month < 0) {
-    current_month = 11;
-    current_year--;
+  if (isPastDate) {
+    alert("Você não pode adicionar tasks em dias passados!");
+    return;
   }
 
-  renderCalendar();
+  selectedDate = `${current_year}-${current_month + 1}-${day}`;
+  showTasks();
 }
 
-//função  responsavel para gerar a interface das tarefas do dia especifico
-function addTask(day) {
-  let taskListContainer = document.getElementById("show-tasks");
-  taskListContainer.innerHTML = "";
-  
-  let header = document.createElement("div");
-  header.id = `header-${day}`;
-  header.className = "header-tasks";
+function showTasks() {
+  if (!selectedDate) return;
 
-  let title = document.createElement("h2");
-  title.id = `title-${day}`;
-  title.textContent = `Tarefas para o dia ${day}`;
-  title.textContent.className = "title-textContent";
+  let tasks = tasksStorage[selectedDate] || [];
 
-  header.appendChild(title);
-  
-  let btnAddTask = document.createElement("button");
-  btnAddTask.id = `btn-add-task-${day}`;
-  btnAddTask.textContent = "Adicionar task";
-  btnAddTask.onclick = function () { createTaskInput(day); };
-  header.appendChild(btnAddTask);
-  
-  taskListContainer.appendChild(header);
-  
-  let taskList = document.createElement("div");
-  taskList.id = `tasks-${day}`;
-  taskList.className = "tasks-list";
-  
-  if (tasksStorage[day] && tasksStorage[day].length > 0) {
-    tasksStorage[day].forEach(task => {
-      let taskItem = addTaskToDOM(day, task, taskList);
-      taskList.appendChild(taskItem);
-    });
-  } else {
-    let noTaskMessage = document.createElement("p");
-    noTaskMessage.textContent = "Sem tarefas";
-    noTaskMessage.className = "no-task";
-    taskList.appendChild(noTaskMessage);
-  }
-  
-  taskListContainer.appendChild(taskList);
+  taskContainer.innerHTML = `
+    <div class="header-tasks">
+      <h2>Tasks para ${selectedDate.split("-").reverse().join("/")}</h2>
+      <div class="task-input">
+        <input type="text" id="taskInput" placeholder="Digite sua task..." />
+        <button onclick="addTask()">Adicionar</button>
+      </div>
+    </div>
+    <ul class="task-list">
+      ${tasks.map((task, index) => `
+        <li>
+          ${task} 
+          <button onclick="deleteTask(${index})">❌</button>
+        </li>`).join("")}
+    </ul>
+  `;
+
+  document.getElementById("taskInput").focus();
 }
-//Cria o campo para o usuario adicionar as tarefas para aquele dia especifico
-function createTaskInput(day) {
-  let taskList = document.getElementById(`tasks-${day}`);
-  let input = document.createElement("input");
-  input.id = `input-task-${day}`;
-  input.type = "text";
-  input.placeholder = "Digite a tarefa...";
-  taskList.appendChild(input);
-  input.focus();
 
-  input.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      let taskValue = input.value.trim();
-      if (taskValue !== "") {
-        if (!tasksStorage[day]) {
-          tasksStorage[day] = [];
-        }
-        tasksStorage[day].push(taskValue);
-        localStorage.setItem("tasks", JSON.stringify(tasksStorage));
-        
-        let taskItem = addTaskToDOM(day, taskValue, taskList);
-        taskList.appendChild(taskItem);
-      }
-      input.remove();
+function addTask() {
+  if (!selectedDate) return;
+
+  let taskInput = document.getElementById("taskInput");
+  let taskText = taskInput.value.trim();
+
+  if (taskText) {
+    if (!tasksStorage[selectedDate]) {
+      tasksStorage[selectedDate] = [];
     }
-  });
-}
-
-function addTaskToDOM(day, taskValue, taskList) {//Cria e retorna para um novo item das tarefas e o botão de apagar
-  let taskItem = document.createElement("p");
-  taskItem.id = `task-${day}-${taskValue}`;
-  
-  let taskText = document.createElement("span");
-  taskText.textContent = taskValue;
-  taskText.id = `task-text-${day}-${taskValue}`;
-  
-  let deleteButton = document.createElement("button");
-  deleteButton.textContent = "Apagar";
-  deleteButton.onclick = function () {
-    taskItem.remove();
-    tasksStorage[day] = tasksStorage[day].filter(task => task !== taskValue);
+    tasksStorage[selectedDate].push(taskText);
     localStorage.setItem("tasks", JSON.stringify(tasksStorage));
-    if (!tasksStorage[day] || tasksStorage[day].length === 0) {
-      let noTaskMessage = document.createElement("p");
-      noTaskMessage.id = `no-task-${day}`;
-      noTaskMessage.textContent = "Sem tarefas";
-      noTaskMessage.className = "no-task";
-      taskList.appendChild(noTaskMessage);
-    }
-  };
-  
-  taskItem.appendChild(taskText);
-  taskItem.appendChild(deleteButton);
-  return taskItem;
+    taskInput.value = ""; // Limpar input
+    renderCalendar();
+    showTasks();
+  }
 }
 
-// Adiciona evento para cada dia do calendário
-document.querySelectorAll(".days li").forEach(day => {
-  day.addEventListener("click", function () {
-    let selectedDay = this.textContent;
-    addTask(selectedDay);
-  });
-});
+function deleteTask(index) {
+  if (!selectedDate) return;
+  tasksStorage[selectedDate].splice(index, 1);
+
+  if (tasksStorage[selectedDate].length === 0) {
+    delete tasksStorage[selectedDate];
+  }
+
+  localStorage.setItem("tasks", JSON.stringify(tasksStorage));
+  renderCalendar();
+  showTasks();
+}
+
+renderCalendar();

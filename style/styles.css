@@ -179,6 +179,13 @@ body {
   .header-tasks h2{
     font-size: 30px;
   }
+  .task-day {
+    background-color: #bd5296 !important;
+    font-weight: bold;
+    color: white;
+  }
+  
+  
 }
 
 
